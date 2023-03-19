@@ -1,0 +1,11 @@
+# ignore everything
+*
+
+# But not these files
+!.gitignore
+# Allow anything that is a directory
+!*/
+# Allow all the file types you are interested in
+!*.py
+
+# https://stackoverflow.com/questions/9162919/whitelisting-and-subdirectories-in-git
