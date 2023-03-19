@@ -4,7 +4,7 @@ import socket
 class TCPServer(object):
     def run(self):
         # Create String with Server Name
-        servername = "THREEONEOH-T470 SERVER"
+        servername = "THREEONEOH-C200 SERVER"
         # Accept Connection
         serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         serversocket.bind(('0.0.0.0', 6789))
