@@ -20,17 +20,21 @@ class TCPServer(object):
                 arr = clientmsg.decode().split(":")
                 clientname = arr[0]
                 clientint = int(arr[1])
+                print(arr) 
                 if 1 <= clientint <= 100:
                     pass
                 else:
                     raise ValueError("Integer not between 1 to 100")
-                    # If server receives an integer value that is out of range, terminate after releasing any created sockets, and shutdown the server.
-                    clientsocket.shutdown(socket.SHUT_RDWR)
-                    clientsocket.close()
-                    serversocket.shutdown(socket.SHUT_RDWR)
-                    serversocket.close()
-            except ValueError as ex:
-                print("Error on split %s: %s" % (clientmsg, ex))
+            except Exception as ex:
+                strmsg = "Error %s: %s" % (ex, clientmsg)
+                print(strmsg)
+                clientsocket.send(strmsg.encode())
+                # If server receives an integer value that is out of range, terminate after releasing any created sockets, and shutdown the server.
+                clientsocket.shutdown(socket.SHUT_RDWR)
+                clientsocket.close()
+                serversocket.shutdown(socket.SHUT_RDWR)
+                serversocket.close()
+                
             print("client name: %s server name: %s" % (clientname, servername))
             serverint = 99
             # Pick an integer between 1 and 100 and write to screen output: client's number, server's number, sum of those numbers
