@@ -26,14 +26,15 @@ class TCPServer(object):
                 else:
                     raise ValueError("Integer not between 1 to 100")
             except Exception as ex:
-                strmsg = "Error %s: %s" % (ex, clientmsg)
+                strmsg = "Err: %s; ClientMsg: %s" % (ex, clientmsg.decode())
                 print(strmsg)
-                clientsocket.send(strmsg.encode())
+                clientsocket.send(str(ex).encode())
                 # If server receives an integer value that is out of range, terminate after releasing any created sockets, and shutdown the server.
                 clientsocket.shutdown(socket.SHUT_RDWR)
                 clientsocket.close()
                 serversocket.shutdown(socket.SHUT_RDWR)
                 serversocket.close()
+                exit()
                 
             print("client name: %s server name: %s" % (clientname, servername))
             serverint = 98
