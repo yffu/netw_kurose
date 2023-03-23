@@ -36,7 +36,7 @@ class TCPServer(object):
                 serversocket.close()
                 
             print("client name: %s server name: %s" % (clientname, servername))
-            serverint = 99
+            serverint = 98
             # Pick an integer between 1 and 100 and write to screen output: client's number, server's number, sum of those numbers
             print("client int: %s server int: %s sum: %s" % (clientint, serverint, clientint + serverint))
             # Send server's name and chosen integer back to the client.
