@@ -6,7 +6,7 @@ class TCPClient(object):
         # Input Stream from keyboard
         # Accept integer from 1 to 100
         try:
-            clientint = int(input("Enter integer from 1 to 100: "))
+            clientint = int(input("Enter any integer from 1 to 100: "))
         except ValueError as ex:
             print("Error on converting %s: %s" % (clientint, ex))
         # Open TCP socket to your server
