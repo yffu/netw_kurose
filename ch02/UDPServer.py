@@ -20,7 +20,7 @@ class UDPServer(object):
                     server_msg = server_name + ":" + str(server_int)
                     server_socket.sendto(server_msg.encode(), client_ip)
                     break
-                print("client name: %s server name: %s" % (client_name, server_name)
+                print("client name: %s server name: %s" % (client_name, server_name))
                 print("client int: %s server int: %s sum: %s" % (client_int, server_int, client_int + server_int))
                 server_msg = server_name + ":" + str(server_int)
                 server_socket.sendto(server_msg.encode(), client_ip)
