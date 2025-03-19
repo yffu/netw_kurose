@@ -3,46 +3,33 @@ import socket
 
 class TCPServer(object):
     def run(self):
-        # Create String with Server Name
-        servername = "THREEONEOH-C200 SERVER"
-        # Accept Connection
-        serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        serversocket.bind(('0.0.0.0', 6789))
-        # OSError: [Errno 99] Cannot assign requested address
-        serversocket.listen(5) # queue up as many as 5 connect requests before refusing outside connections
-        print('starts listen')
+        server_name = "T470 SERVER"
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.bind(('localhost', 12001))
+        server_socket.listen(1)
         while True:
-            # Receive client message:
-            (clientsocket, address) = serversocket.accept()
-            clientmsg = clientsocket.recv(4096)
-            # Print the client's name from the message and the server's name
+            connection_socket, address = server_socket.accept()
+            client_msg = connection_socket.recv(1024).decode()
             try:
-                arr = clientmsg.decode().split(":")
-                clientname = arr[0]
-                clientint = int(arr[1])
-                print(arr) 
-                if 1 <= clientint <= 100:
-                    pass
+                arr = client_msg.split(":")
+                client_name = arr[0]
+                client_int = int(arr[1])
+                if 1 <= client_int <= 100:
+                    server_int = 99
                 else:
-                    raise ValueError("Integer not between 1 to 100")
-            except Exception as ex:
-                strmsg = "Err: %s; ClientMsg: %s" % (ex, clientmsg.decode())
-                print(strmsg)
-                clientsocket.send(str(ex).encode())
-                # If server receives an integer value that is out of range, terminate after releasing any created sockets, and shutdown the server.
-                clientsocket.shutdown(socket.SHUT_RDWR)
-                clientsocket.close()
-                serversocket.shutdown(socket.SHUT_RDWR)
-                serversocket.close()
-                exit()
-                
-            print("client name: %s server name: %s" % (clientname, servername))
-            serverint = 98
-            # Pick an integer between 1 and 100 and write to screen output: client's number, server's number, sum of those numbers
-            print("client int: %s server int: %s sum: %s" % (clientint, serverint, clientint + serverint))
-            # Send server's name and chosen integer back to the client.
-            strmsg = servername + ":" + str(serverint)
-            clientsocket.send(strmsg.encode())
+                    server_int = 0
+                    server_msg = server_name + ":" + str(server_int)
+                    connection_socket.send(server_msg.encode())
+                    break
+            except ValueError as ex:
+                print("Error on split %s: %s" % (client_msg, ex))
+            print("client name: %s server name: %s" % (client_name, server_name))
+            print("client int: %s server int: %s sum: %s" % (client_int, server_int, client_int + server_int))
+            server_msg = server_name + ":" + str(server_int)
+            connection_socket.send(server_msg.encode())
+            connection_socket.shutdown(socket.SHUT_RDWR)
+            connection_socket.close()
+        server_socket.close()
 
 
 if __name__ == '__main__':

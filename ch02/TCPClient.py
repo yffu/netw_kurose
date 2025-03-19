@@ -3,34 +3,27 @@ import socket
 
 class TCPClient(object):
     def run(self):
-        # Input Stream from keyboard
-        # Accept integer from 1 to 100
         try:
-            clientint = int(input("Enter any integer from 1 to 100: "))
+            client_int = int(input("Enter integer from 1 to 100: "))
         except ValueError as ex:
-            print("Error on converting %s: %s" % (clientint, ex))
-        # Open TCP socket to your server
-        clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        clientsocket.connect(("192.168.0.145", 6789))
-        clientname = "THREEONEOH-T470 CLIENT"
-        # Send Client Name + Integer
-        bytemsg = clientname + ":" + str(clientint)
-        clientsocket.send(bytemsg.encode())
-        # Wait for a server reply
-        servermsg = clientsocket.recv(4096)
+            print("Error on converting %s: %s" % (client_int, ex))
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_socket.connect(('localhost', 12001))
+        client_name = "T470 CLIENT"
+        msg = client_name + ":" + str(client_int)
+        client_socket.send(msg.encode())
+        server_msg = client_socket.recv(1024)
         try:
-            arr = servermsg.decode().split(":")
-            print(arr)
-            servername = arr[0]
-            serverint = int(arr[1])
-        except ValueError as ex:
-            print("Error on split %s: %s" % (servermsg, ex))
-        print("client name: %s server name: %s" % (clientname, servername))
-        print("client int: %s server int: %s sum: %s" % (clientint, serverint, clientint + serverint))
-        # Terminate after releasing any created sockets.
-        clientsocket.shutdown(socket.SHUT_RDWR)
-        # shutdown with option 3 is SHUT_RDWR, further sends and receives are disallowed.
-        clientsocket.close()
+            arr = server_msg.decode().split(":")
+            server_name = arr[0]
+            server_int = int(arr[1])
+            if server_int != 0:
+                print("client name: %s server name: %s" % (client_name, server_name))
+                print("client int: %s server int: %s sum: %s" % (client_int, server_int, client_int + server_int))
+        except Exception as ex:
+            print("Err: %s; ServerMsg: %s" % (ex, server_msg.decode()))
+        client_socket.shutdown(socket.SHUT_RDWR)
+        client_socket.close()
 
 
 if __name__ == '__main__':
