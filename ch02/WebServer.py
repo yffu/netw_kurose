@@ -17,7 +17,7 @@ while True:
         filename = message.split()[1]
         print("open file: " + filename[1:])
         f = open(filename[1:])
-        outputdata = [] #Fill in start #Fill in end
+        outputdata = []
         #Send one HTTP header line into socket
         outputdata.append("HTTP/1.1 200 OK")
         outputdata.append("Connection: close")
@@ -39,7 +39,6 @@ while True:
         f = open("WebPage404.html")
         outputdata = []
         #Send response message for file not found
-        #Fill in start
         outputdata.append("HTTP/1.1 404 Not Found")
         outputdata.append("Connection: close")
         outputdata.append("Date: " + datetime.now().strftime("%a, %d %b %Y %H:%M:%S %Z"))
@@ -49,12 +48,9 @@ while True:
         for i in range(0, len(outputdata)):
             connection_socket.send(outputdata[i].encode())
             connection_socket.send("\r\n".encode())
-        #Fill in end
         #Close client socket
-        #Fill in start
-        connection_socket.send("\r\n".encode()) # entity body preceded by a CRLF
+        connection_socket.send("\r\n".encode()) #entity body preceded by a CRLF
         connection_socket.send(f.read().encode())
         connection_socket.close()
-        #Fill in end
 server_socket.close()
 sys.exit()#Terminate the program after sending the corresponding data
