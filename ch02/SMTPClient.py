@@ -12,7 +12,7 @@ class SMTPClient(object):
         print(recv)
         if recv[:3] != '220':
             print('220 reply not received from server.')
-        send_cmd = 'HELO tester\r\n'
+        send_cmd = 'HELO Client\r\n'
         client_socket.send(send_cmd.encode())
         recv = client_socket.recv(1024).decode()
         print(recv)
@@ -24,14 +24,33 @@ class SMTPClient(object):
         recv = client_socket.recv(1024).decode()
         print(recv)
         ssl_sock = context.wrap_socket(client_socket, server_hostname=server_name)
-        ssl_sock.send('EHLO tester\r\n'.encode())
+        ssl_sock.send('EHLO client\r\n'.encode())
         data = ssl_sock.recv(1024)
         print(data.decode())
-        ssl_sock.send('AUTH LOGIN\r\n'.encode())
-        data = ssl_sock.recv(1024)
-        print(data.decode())
-        # https://tedboy.github.io/python_stdlib/generated/generated/smtplib.SMTP.starttls.html
-        # but how to implement using send/recv on the ssl socket?
+        username = 'test_user'
+        password = 'test_pwd'
+        send_msg = 'AUTH LOGIN\r\n'
+        ssl_sock.send(send_msg.encode())
+        data = ssl_sock.recv(1024).decode()
+        print(data[4:])
+        data = base64.b64decode(data[4:]).decode('utf-8')
+        print(data)
+        send_msg = base64.b64encode(username.encode('utf-8')).decode('utf-8') + '\r\n'
+        print(send_msg)
+        ssl_sock.send(send_msg.encode())
+        data = ssl_sock.recv(1024).decode()
+        print(data)
+        data = base64.b64decode(data[4:]).decode('utf-8')
+        print(data)
+        send_msg = base64.b64encode(password.encode('utf-8')).decode('utf-8') + '\r\n'
+        print(send_msg)
+        ssl_sock.send(send_msg.encode())
+        data = ssl_sock.recv(1024).decode()
+        print(data)
+        # https://www.samlogic.net/articles/smtp-commands-reference-auth.htm
+        # this works but you need 2 factor authentication as of 2025 > the following status code is returned even after correct username and password provided
+        # 534-5.7.9 Application-specific password required. For more information, go to
+        # 534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor d2e1a72fcca58-73906159dd5sm929236b3a.135 - gsmtp
 
 
     def run(self):
